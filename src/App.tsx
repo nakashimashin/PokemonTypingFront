@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Auth from "./pages/Auth";
-import Game from "./pages/Game";
+import { Auth } from "./pages/Auth";
+import { Game } from "./pages/Game";
 
 function App() {
   return (
