@@ -5,3 +5,19 @@
 .waiting-letters{
     color: #aaaaaa;
 }
+
+.current-letter {
+    color: #aaaaaa;
+    text-decoration: underline;
+    animation: blink 1s linear infinite;
+  }
+
+  .typo {
+    color: red;
+  }
+  
+  @keyframes blink {
+    100% {
+      text-decoration: none;
+    }
+  }
