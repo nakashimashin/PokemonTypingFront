@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./Game.css";
 
 export const Game = () => {
-  const [pokemonData, setPokemonData] = useState<any>([]);
+  const [pokemonData, setPokemonData] = useState<string>();
   const [text, setText] = useState<string>("test test");
   const [typing, setTyping] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
@@ -12,36 +12,21 @@ export const Game = () => {
   useEffect(() => {
     (async () => {
       try {
-        let res: any = await getPokemon(pokeApiUrl);
-        loadPokemon(res.results);
+        fetchPokemon();
       } catch (err) {
         console.error("Failed to fetch pokemon", err);
       }
     })();
   }, []);
 
-  const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species/";
+  const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species";
 
-  const getPokemon = (url: string) => {
-    return new Promise((resolve, reject) => {
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
-          resolve(data);
-        })
-        .catch((err) => reject(err));
-    });
-  };
-
-  const loadPokemon = async (data: any) => {
-    let _pokemonData: any = await Promise.all(
-      data.map((pokemon: any) => {
-        let pokemonrecord = getPokemon(pokemon.url);
-        return pokemonrecord;
-      })
-    );
-    setPokemonData(_pokemonData);
-    console.log(_pokemonData);
+  const fetchPokemon = async () => {
+    const index = Math.floor(Math.random() * 151 + 1);
+    const res = await fetch(`${pokeApiUrl}/${index}`);
+    const result = await res.json();
+    setPokemonData(result.names[0].name);
+    return result;
   };
 
   const typingToggle = () => {
@@ -69,11 +54,7 @@ export const Game = () => {
 
   return (
     <div>
-      <div>
-        {pokemonData.map((pokemon: any, i: number) => {
-          return <p key={i}>{pokemon.names[0].name}</p>;
-        })}
-      </div>
+      <div>{pokemonData || ""}</div>
       <div onKeyDown={handleKey} tabIndex={0}>
         <div id="textbox">
           {text.split("").map((char, index) => (
