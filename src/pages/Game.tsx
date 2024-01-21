@@ -1,14 +1,15 @@
 import { MyButton } from "../components/MyButton";
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Game.css";
 
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [text, setText] = useState<string>("test test");
+  const [text, setText] = useState<string>("ああああ");
   const [typing, setTyping] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
 
   useEffect(() => {
     if (!isLoaded) {
@@ -23,6 +24,14 @@ export const Game = () => {
     }
   }, [isLoaded]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (typing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [typing]);
+
   const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species";
 
   const fetchPokemon = async () => {
@@ -30,6 +39,7 @@ export const Game = () => {
     const res = await fetch(`${pokeApiUrl}/${index}`);
     const result = await res.json();
     setPokemonData(result.names[0].name);
+    // setText(result.names[0].name);
     return result;
   };
 
@@ -37,16 +47,19 @@ export const Game = () => {
     setTyping(!typing);
   };
 
-  const handleKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const currentInputValue = e.target.value;
+    setInputValue(currentInputValue);
+
     if (!typing) return;
 
-    if (e.key === " ") {
-      e.preventDefault();
-    }
+    const lastInputChar = currentInputValue.slice(-1);
+    const expectedChar = text[position];
 
-    if (e.key === text[position]) {
+    if (lastInputChar === expectedChar) {
       setPosition(position + 1);
-      if (position === text.length - 1) {
+      setInputValue(currentInputValue.slice(0, -1));
+      if (position + 1 === text.length) {
         setTyping(false);
       }
     } else {
@@ -59,7 +72,7 @@ export const Game = () => {
   return (
     <div>
       <div>{pokemonData}</div>
-      <div onKeyDown={handleKey} tabIndex={0}>
+      <div tabIndex={0}>
         <div id="textbox">
           {text.split("").map((char, index) => (
             <span
@@ -78,6 +91,13 @@ export const Game = () => {
             </span>
           ))}
         </div>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInput}
+          ref={inputRef}
+          style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}
+        />
         <MyButton onClick={typingToggle}>{typing ? "OFF" : "ON"}</MyButton>
       </div>
     </div>
