@@ -10,11 +10,14 @@ export const Game = () => {
   const [typo, setTypo] = useState<number[]>([]);
 
   useEffect(() => {
-    const fetchPokemonData = async () => {
-      let res: any = await getPokemon(pokeApiUrl);
-      loadPokemon(res.results);
-    };
-    fetchPokemonData();
+    (async () => {
+      try {
+        let res: any = await getPokemon(pokeApiUrl);
+        loadPokemon(res.results);
+      } catch (err) {
+        console.error("Failed to fetch pokemon", err);
+      }
+    })();
   }, []);
 
   const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon/";
