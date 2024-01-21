@@ -5,7 +5,7 @@ import "./Game.css";
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [text, setText] = useState<string>("ふシギバナ");
+  const [text, setText] = useState<string>(" ");
   const [typing, setTyping] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
@@ -39,7 +39,7 @@ export const Game = () => {
     const res = await fetch(`${pokeApiUrl}/${index}`);
     const result = await res.json();
     setPokemonData(result.names[0].name);
-    // setText(result.names[0].name);
+    setText(result.names[0].name);
     return result;
   };
 
