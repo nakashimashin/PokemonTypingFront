@@ -4,20 +4,24 @@ import "./Game.css";
 
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [text, setText] = useState<string>("test test");
   const [typing, setTyping] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        fetchPokemon();
-      } catch (err) {
-        console.error("Failed to fetch pokemon", err);
-      }
-    })();
-  }, []);
+    if (!isLoaded) {
+      (async () => {
+        try {
+          await fetchPokemon();
+          setIsLoaded(true);
+        } catch (err) {
+          console.error("Failed to fetch pokemon", err);
+        }
+      })();
+    }
+  }, [isLoaded]);
 
   const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species";
 
@@ -54,7 +58,7 @@ export const Game = () => {
 
   return (
     <div>
-      <div>{pokemonData || ""}</div>
+      <div>{pokemonData}</div>
       <div onKeyDown={handleKey} tabIndex={0}>
         <div id="textbox">
           {text.split("").map((char, index) => (
