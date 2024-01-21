@@ -5,7 +5,7 @@ import "./Game.css";
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [text, setText] = useState<string>("ああああ");
+  const [text, setText] = useState<string>("ふシギバナ");
   const [typing, setTyping] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
@@ -47,6 +47,13 @@ export const Game = () => {
     setTyping(!typing);
   };
 
+  const katakanaToHiragana = (str: string) => {
+    return str.replace(/[\u30a1-\u30f6]/g, (match) => {
+      const chr = match.charCodeAt(0) - 0x60;
+      return String.fromCharCode(chr);
+    });
+  };
+
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentInputValue = e.target.value;
     setInputValue(currentInputValue);
@@ -56,7 +63,10 @@ export const Game = () => {
     const lastInputChar = currentInputValue.slice(-1);
     const expectedChar = text[position];
 
-    if (lastInputChar === expectedChar) {
+    if (
+      lastInputChar === expectedChar ||
+      lastInputChar === katakanaToHiragana(expectedChar)
+    ) {
       setPosition(position + 1);
       setInputValue(currentInputValue.slice(0, -1));
       if (position + 1 === text.length) {
