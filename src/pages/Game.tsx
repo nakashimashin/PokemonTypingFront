@@ -20,13 +20,15 @@ export const Game = () => {
     })();
   }, []);
 
-  const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon/";
+  const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species/";
 
   const getPokemon = (url: string) => {
     return new Promise((resolve, reject) => {
       fetch(url)
         .then((res) => res.json())
-        .then((data) => resolve(data))
+        .then((data) => {
+          resolve(data);
+        })
         .catch((err) => reject(err));
     });
   };
@@ -39,6 +41,7 @@ export const Game = () => {
       })
     );
     setPokemonData(_pokemonData);
+    console.log(_pokemonData);
   };
 
   const typingToggle = () => {
@@ -68,7 +71,7 @@ export const Game = () => {
     <div>
       <div>
         {pokemonData.map((pokemon: any, i: number) => {
-          return <p key={i}>{pokemon.name}</p>;
+          return <p key={i}>{pokemon.names[0].name}</p>;
         })}
       </div>
       <div onKeyDown={handleKey} tabIndex={0}>
