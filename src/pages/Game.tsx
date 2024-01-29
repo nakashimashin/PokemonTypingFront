@@ -26,12 +26,6 @@ export const Game = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (typing && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [typing]);
-
   const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species";
 
   const fetchPokemon = async () => {
@@ -44,7 +38,11 @@ export const Game = () => {
   };
 
   const typingToggle = () => {
-    setTyping(!typing);
+    const newTypingState = !typing;
+    setTyping(newTypingState);
+    if (newTypingState && inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const katakanaToHiragana = (str: string) => {
