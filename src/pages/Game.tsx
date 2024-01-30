@@ -1,5 +1,6 @@
 import { MyButton } from "../components/MyButton";
 import { useEffect, useRef, useState } from "react";
+import { toHiragana } from "wanakana";
 import "./Game.css";
 
 export const Game = () => {
@@ -46,10 +47,7 @@ export const Game = () => {
   };
 
   const katakanaToHiragana = (str: string) => {
-    return str.replace(/[\u30a1-\u30f6]/g, (match) => {
-      const chr = match.charCodeAt(0) - 0x60;
-      return String.fromCharCode(chr);
-    });
+    return toHiragana(str);
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,21 +56,52 @@ export const Game = () => {
 
     if (!typing) return;
 
-    const lastInputChar = currentInputValue.slice(-1);
-    const expectedChar = text[position];
+    let lastInputChar = currentInputValue.slice(-1);
+    let expectedChar = text[position];
+    let expectedHiragana = katakanaToHiragana(expectedChar); // カタカナからひらがなへ変換
 
+    // 拗音をチェック
     if (
-      lastInputChar === expectedChar ||
-      lastInputChar === katakanaToHiragana(expectedChar)
+      ["ャ", "ュ", "ョ", "ォ", "ァ", "ィ", "ゥ", "ェ"].includes(
+        text[position + 1]
+      )
     ) {
-      setPosition(position + 1);
-      setInputValue(currentInputValue.slice(0, -1));
-      if (position + 1 === text.length) {
+      expectedChar += text[position + 1];
+      expectedHiragana = katakanaToHiragana(expectedChar);
+      if (currentInputValue.length > 1) {
+        lastInputChar = currentInputValue.slice(-2);
+      }
+    }
+
+    // 促音をチェック
+    if (expectedChar === "ッ" && lastInputChar.length === 1) {
+      expectedChar += text[position + 1].toLowerCase();
+      expectedHiragana += katakanaToHiragana(text[position + 1]).toLowerCase();
+      if (currentInputValue.length > 1) {
+        lastInputChar = currentInputValue.slice(-2);
+      }
+    }
+
+    console.log(`現在の入力: ${currentInputValue}`);
+    console.log(`現在のポジション: ${position}`);
+    console.log(`期待される文字 (カタカナ): ${expectedChar}`);
+    console.log(`期待される文字 (ひらがな): ${expectedHiragana}`);
+    console.log(`入力された最後の文字: ${lastInputChar}`);
+
+    // ユーザー入力と期待される文字が一致するかどうかを確認
+    if (lastInputChar === expectedChar || lastInputChar === expectedHiragana) {
+      console.log("入力が期待される文字に一致しました");
+      setPosition(position + expectedChar.length); // 拗音の場合、ポジションを2つ進める
+      setInputValue(currentInputValue.slice(0, -expectedChar.length));
+      if (position + expectedChar.length === text.length) {
+        console.log("全ての文字が正しく入力されました");
         setTyping(false);
       }
     } else {
+      console.log("入力が期待される文字と一致しませんでした");
       if (!typo.includes(position)) {
         setTypo([...typo, position]);
+        console.log(`タイポが発生したポジション: ${position}`);
       }
     }
   };
