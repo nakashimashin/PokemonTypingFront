@@ -59,7 +59,7 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 80px !important;
+    margin-top: 15px !important;
   }
   
   .login-button:hover {
