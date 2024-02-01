@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toHiragana } from "wanakana";
+import { Timer } from "../components/Timer";
 import "./Game.css";
 
 export const Game = () => {
@@ -146,6 +147,7 @@ export const Game = () => {
           style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}
         />
       </div>
+      <Timer />
     </div>
   );
 };
