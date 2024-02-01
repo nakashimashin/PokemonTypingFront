@@ -5,6 +5,8 @@ import "./Game.css";
 
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
+  const [pokemonUrl, setPokemonUrl] = useState<string>();
+  const [pokemonImage, setPokemonImage] = useState<string>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [text, setText] = useState<string>(" ");
   const [typing, setTyping] = useState<boolean>(false);
@@ -25,6 +27,10 @@ export const Game = () => {
     }
   }, [isLoaded]);
 
+  useEffect(() => {
+    fetchPokemonImage();
+  }, [pokemonUrl]);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species";
@@ -35,7 +41,17 @@ export const Game = () => {
     const result = await res.json();
     setPokemonData(result.names[0].name);
     setText(result.names[0].name);
-    return result;
+    const url = result.varieties[0].pokemon.url;
+    setPokemonUrl(url);
+  };
+
+  const fetchPokemonImage = async () => {
+    if (pokemonUrl) {
+      const res = await fetch(pokemonUrl);
+      const result = await res.json();
+      const image = result.sprites.front_default;
+      setPokemonImage(image);
+    }
   };
 
   const typingToggle = () => {
@@ -109,6 +125,7 @@ export const Game = () => {
   return (
     <div>
       <div>{pokemonData}</div>
+      <img src={pokemonImage} />
       <div tabIndex={0}>
         <div id="textbox">
           {text.split("").map((char, index) => (
