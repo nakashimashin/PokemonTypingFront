@@ -66,6 +66,15 @@ export const Game = () => {
     return toHiragana(str);
   };
 
+  const fetchNewPokemon = async () => {
+    setIsLoaded(false);
+    setPosition(0);
+    setTypo([]);
+    setInputValue("");
+    await fetchPokemon();
+    setIsLoaded(true);
+  };
+
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentInputValue = e.target.value;
     setInputValue(currentInputValue);
@@ -112,6 +121,7 @@ export const Game = () => {
       if (position + expectedChar.length === text.length) {
         console.log("全ての文字が正しく入力されました");
         setTyping(false);
+        fetchNewPokemon();
       }
     } else {
       console.log("入力が期待される文字と一致しませんでした");
