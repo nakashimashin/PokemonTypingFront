@@ -131,15 +131,7 @@ export const Game = () => {
           {text.split("").map((char, index) => (
             <span
               key={index}
-              className={
-                index < position
-                  ? "typed-letters"
-                  : typo.includes(index)
-                    ? "typo"
-                    : index === position
-                      ? "current-letter"
-                      : "waiting-letters"
-              }
+              className={index < position ? "typed-letters" : "waiting-letters"}
             >
               {char}
             </span>

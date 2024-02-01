@@ -3,21 +3,5 @@
 }
 
 .waiting-letters{
-    color: #aaaaaa;
+    font-size: 0;
 }
-
-.current-letter {
-    color: #aaaaaa;
-    text-decoration: underline;
-    animation: blink 1s linear infinite;
-  }
-
-  .typo {
-    color: red;
-  }
-  
-  @keyframes blink {
-    100% {
-      text-decoration: none;
-    }
-  }
