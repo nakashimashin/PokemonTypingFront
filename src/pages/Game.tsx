@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toHiragana } from "wanakana";
 import "./Game.css";
 
@@ -60,6 +60,12 @@ export const Game = () => {
     setTypo([]);
     setInputValue("");
     await fetchPokemon();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      fetchNewPokemon();
+    }
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,6 +149,7 @@ export const Game = () => {
           type="text"
           value={inputValue}
           onChange={handleInput}
+          onKeyDown={handleKeyDown}
           ref={inputRef}
           style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}
         />
