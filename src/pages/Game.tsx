@@ -6,26 +6,23 @@ export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
   const [pokemonUrl, setPokemonUrl] = useState<string>();
   const [pokemonImage, setPokemonImage] = useState<string>();
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [text, setText] = useState<string>(" ");
-  const [typing, setTyping] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
   useEffect(() => {
-    if (!isLoaded) {
-      (async () => {
-        try {
-          await typingToggle();
-          await fetchPokemon();
-          setIsLoaded(true);
-        } catch (err) {
-          console.error("Failed to fetch pokemon", err);
+    (async () => {
+      try {
+        if (inputRef.current) {
+          inputRef.current.focus();
         }
-      })();
-    }
-  }, [isLoaded]);
+        await fetchPokemon();
+      } catch (err) {
+        console.error("Failed to fetch pokemon", err);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     fetchPokemonImage();
@@ -54,32 +51,20 @@ export const Game = () => {
     }
   };
 
-  const typingToggle = () => {
-    const newTypingState = !typing;
-    setTyping(newTypingState);
-    if (newTypingState && inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
-
   const katakanaToHiragana = (str: string) => {
     return toHiragana(str);
   };
 
   const fetchNewPokemon = async () => {
-    setIsLoaded(false);
     setPosition(0);
     setTypo([]);
     setInputValue("");
     await fetchPokemon();
-    setIsLoaded(true);
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentInputValue = e.target.value;
     setInputValue(currentInputValue);
-
-    if (!typing) return;
 
     let lastInputChar = currentInputValue.slice(-1);
     let expectedChar = text[position];
@@ -120,7 +105,6 @@ export const Game = () => {
       setInputValue(currentInputValue.slice(0, -expectedChar.length));
       if (position + expectedChar.length === text.length) {
         console.log("全ての文字が正しく入力されました");
-        setTyping(false);
         fetchNewPokemon();
       }
     } else {
