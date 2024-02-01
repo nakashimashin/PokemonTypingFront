@@ -1,4 +1,3 @@
-import { MyButton } from "../components/MyButton";
 import { useEffect, useRef, useState } from "react";
 import { toHiragana } from "wanakana";
 import "./Game.css";
@@ -18,6 +17,7 @@ export const Game = () => {
     if (!isLoaded) {
       (async () => {
         try {
+          await typingToggle();
           await fetchPokemon();
           setIsLoaded(true);
         } catch (err) {
@@ -152,7 +152,6 @@ export const Game = () => {
           ref={inputRef}
           style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}
         />
-        <MyButton onClick={typingToggle}>{typing ? "OFF" : "ON"}</MyButton>
       </div>
     </div>
   );
