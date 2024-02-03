@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CountDown } from "../hooks/CountDown";
 
 export const Timer = () => {
-  const [countTime, setCountTime] = useState<number>(5);
+  const [countTime, setCountTime] = useState<number>(60);
   CountDown(countTime, setCountTime);
   return (
     <p>

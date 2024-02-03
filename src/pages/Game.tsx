@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
+import { ScoreContext } from "../App";
 import { toHiragana } from "wanakana";
 import { Timer } from "../components/Timer";
 import "./Game.css";
@@ -11,6 +12,7 @@ export const Game = () => {
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const { dispatch } = useContext(ScoreContext);
 
   useEffect(() => {
     (async () => {
@@ -65,6 +67,7 @@ export const Game = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
+      dispatch({ type: "decrement", score: 1 });
       fetchNewPokemon();
     }
   };
@@ -112,6 +115,7 @@ export const Game = () => {
       setInputValue(currentInputValue.slice(0, -expectedChar.length));
       if (position + expectedChar.length === text.length) {
         console.log("全ての文字が正しく入力されました");
+        dispatch({ type: "increment", score: 1 });
         fetchNewPokemon();
       }
     } else {
