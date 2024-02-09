@@ -1,5 +1,4 @@
 import React from "react";
-import "./Auth.css";
 import { useForm } from "react-hook-form";
 import { validationSchema } from "../utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,9 +27,9 @@ export const Auth = () => {
   };
 
   return (
-    <div className="body">
+    <div className="bg-red-500">
       <div className="form-container">
-        <h1>ログイン</h1>
+        <h1 className="text-blue-500">ログイン</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="name">Name</label>
           <input id="name" type="text" {...register("name")} />

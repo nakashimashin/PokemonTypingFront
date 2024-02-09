@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useContext } from "react";
 import { ScoreContext } from "../App";
 import { toHiragana } from "wanakana";
 import { Timer } from "../components/Timer";
-import "./Game.css";
+// import "./Game.css";
 
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
