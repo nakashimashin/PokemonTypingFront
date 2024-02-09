@@ -29,6 +29,7 @@ export const Game = () => {
 
   useEffect(() => {
     fetchPokemonImage();
+    console.log(pokemonData);
   }, [pokemonUrl]);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +37,7 @@ export const Game = () => {
   const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species";
 
   const fetchPokemon = async () => {
-    const index = Math.floor(Math.random() * 151 + 1);
+    const index = Math.floor(Math.random() * 640 + 1);
     const res = await fetch(`${pokeApiUrl}/${index}`);
     const result = await res.json();
     setPokemonData(result.names[0].name);
