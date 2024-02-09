@@ -15,7 +15,12 @@ const handleClick = (url: string) => {
 export const Button: React.FC<Props> = ({ url, children }) => {
   return (
     <div>
-      <button onClick={handleClick(url)}>{children}</button>
+      <button
+        className="bg-blue-500 hover:bg-blue-300 rounded h-[40px] w-[100px] text-[22px] text-white"
+        onClick={handleClick(url)}
+      >
+        {children}
+      </button>
     </div>
   );
 };
