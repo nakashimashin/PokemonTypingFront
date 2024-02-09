@@ -128,30 +128,35 @@ export const Game = () => {
   };
 
   return (
-    <div>
-      <div>{pokemonData}</div>
-      <img src={pokemonImage} />
-      <div tabIndex={0}>
-        <div id="textbox">
-          {text.split("").map((char, index) => (
-            <span
-              key={index}
-              className={index < position ? "typed-letters" : "waiting-letters"}
-            >
-              {char}
-            </span>
-          ))}
+    <div className="bg-gray-100 flex justify-center items-center h-screen">
+      <div className="flex flex-col items-center">
+        {/* <div>{pokemonData}</div> */}
+        <img src={pokemonImage} className="bg-white w-[200px] h-[200px] mb-3" />
+        <div tabIndex={0}>
+          <div id="textbox">
+            {text.split("").map((char, index) => (
+              <span
+                key={index}
+                className={
+                  index < position ? "text-black text-[30px]" : "text-[0px]"
+                }
+              >
+                {char}
+              </span>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInput}
+            onKeyDown={handleKeyDown}
+            ref={inputRef}
+            style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}
+          />
         </div>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInput}
-          onKeyDown={handleKeyDown}
-          ref={inputRef}
-          style={{ opacity: 0, position: "absolute", pointerEvents: "none" }}
-        />
+        <Timer />
+        <div>Enterキーでスキップ</div>
       </div>
-      <Timer />
     </div>
   );
 };
