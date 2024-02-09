@@ -27,21 +27,50 @@ export const Auth = () => {
   };
 
   return (
-    <div className="bg-red-500">
-      <div className="form-container">
-        <h1 className="text-blue-500">ログイン</h1>
+    <div className="bg-gray-100 flex justify-center items-center h-screen">
+      <div className="bg-white p-[30px] rounded-lg shadow-md w-full max-w-[400px] h-1/2 max-h-[400px]">
+        <h1 className="text-[30px] text-center font-bold">ログイン</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="name">Name</label>
-          <input id="name" type="text" {...register("name")} />
-          <p>{errors.name?.message as React.ReactNode}</p>
-          <label htmlFor="mail">Mail</label>
-          <input id="email" type="email" {...register("email")} />
-          <p>{errors.email?.message as React.ReactNode}</p>
-          <label htmlFor="password">Password</label>
-          <input id="password" type="password" {...register("password")} />
-          <p>{errors.password?.message as React.ReactNode}</p>
-
-          <button className="login-button" type="submit">
+          <div className="flex flex-col">
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              {...register("name")}
+              className="w-full border border-black rounded-md p-[3px]"
+            />
+            <p className="text-red-500">
+              {errors.name?.message as React.ReactNode}
+            </p>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="mail">Mail</label>
+            <input
+              id="email"
+              type="email"
+              {...register("email")}
+              className="w-full border border-black rounded-md p-[3px]"
+            />
+            <p className="text-red-500">
+              {errors.email?.message as React.ReactNode}
+            </p>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              {...register("password")}
+              className="w-full border border-black rounded-md p-[3px]"
+            />
+            <p className="text-red-500">
+              {errors.password?.message as React.ReactNode}
+            </p>
+          </div>
+          <button
+            className="w-full h-[50px] bg-blue-500 hover:bg-blue-300 text-[16px] rounded text-white mt-[15px]"
+            type="submit"
+          >
             送信
           </button>
         </form>
