@@ -3,6 +3,7 @@ import "./Auth.css";
 import { useForm } from "react-hook-form";
 import { validationSchema } from "../utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 
 interface LoginForm {
   name: string;
@@ -11,6 +12,7 @@ interface LoginForm {
 }
 
 export const Auth = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -22,6 +24,7 @@ export const Auth = () => {
 
   const onSubmit = (data: LoginForm) => {
     console.log(data);
+    navigate("/home");
   };
 
   return (
