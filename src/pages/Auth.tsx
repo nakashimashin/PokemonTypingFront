@@ -1,48 +1,82 @@
-import React from "react";
+import React, {useState} from "react";
 import { useForm } from "react-hook-form";
-import { validationSchema } from "../utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/firebaseConfig";
+import { signUpSchema, signInSchema } from "../utils/validationSchema";
 
 interface LoginForm {
-  name: string;
+  name?: string;
   email: string;
   password: string;
 }
 
+
 export const Auth = () => {
   const navigate = useNavigate();
+  const [isSignUp, setIsSignUp] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginForm>({
     mode: "onChange",
-    resolver: zodResolver(validationSchema),
+    resolver: zodResolver(isSignUp ? signUpSchema : signInSchema),
   });
 
-  const onSubmit = (data: LoginForm) => {
-    console.log(data);
-    navigate("/home");
+
+  const onSubmit = async (data: LoginForm) => {
+    setError(null);
+    console.log("テスト");
+    if (isSignUp) {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+        const user = userCredential.user;
+        await updateProfile(user, {
+          displayName: data.name,
+        });
+        console.log('User signed up:', user);
+        navigate("/home");
+      } catch (err) {
+        setError((err as Error).message);
+        console.error('Error signing up:', err);
+      }
+    } else {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+        const user = userCredential.user;
+        console.log('User signed in:', user);
+        navigate("/home");
+      } catch (err) {
+        setError((err as Error).message);
+        console.error('Error signing in:', err);
+      }
+    }
   };
 
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
       <div className="bg-white p-[30px] rounded-lg shadow-md w-full max-w-[400px] h-1/2 max-h-[400px]">
-        <h1 className="text-[30px] text-center font-bold">ログイン</h1>
+        <h1 className="text-[30px] text-center font-bold">{isSignUp ? 'サインアップ' : 'サインイン'}</h1>
+        {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col">
+          {isSignUp && (
+            <div className="flex flex-col">
             <label htmlFor="name">Name</label>
             <input
               id="name"
               type="text"
               {...register("name")}
               className="w-full border border-black rounded-md p-[3px]"
-            />
+              />
             <p className="text-red-500">
               {errors.name?.message as React.ReactNode}
             </p>
           </div>
+          )}
           <div className="flex flex-col">
             <label htmlFor="mail">Mail</label>
             <input
@@ -50,7 +84,7 @@ export const Auth = () => {
               type="email"
               {...register("email")}
               className="w-full border border-black rounded-md p-[3px]"
-            />
+              />
             <p className="text-red-500">
               {errors.email?.message as React.ReactNode}
             </p>
@@ -74,6 +108,9 @@ export const Auth = () => {
             送信
           </button>
         </form>
+        <div className="h-[50px] mt-7 text-center cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
+          {isSignUp ? 'サインイン' : 'サインアップ'}
+        </div>
       </div>
     </div>
   );

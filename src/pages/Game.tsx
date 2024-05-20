@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useContext } from "react";
 import { ScoreContext } from "../App";
 import { toHiragana } from "wanakana";
 import { Timer } from "../components/Timer";
-// import "./Game.css";
 
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
@@ -131,7 +130,7 @@ export const Game = () => {
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
       <div className="flex flex-col items-center">
-        {/* <div>{pokemonData}</div> */}
+        <div>{pokemonData}</div>
         <img src={pokemonImage} className="bg-white w-[200px] h-[200px] mb-3" />
         <div tabIndex={0}>
           <div id="textbox">
