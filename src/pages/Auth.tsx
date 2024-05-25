@@ -30,7 +30,6 @@ export const Auth = () => {
 
   const onSubmit = async (data: LoginForm) => {
     setError(null);
-    console.log("テスト");
     if (isSignUp) {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
