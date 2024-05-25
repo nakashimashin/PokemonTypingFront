@@ -1,10 +1,7 @@
 import "normalize.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Auth } from "./pages/Auth";
-import { Home } from "./pages/Home";
-import { Game } from "./pages/Game";
-import { Result } from "./pages/Result";
 import { createContext, useReducer } from "react";
+import { RouteConfig } from "./components/RouteConfig";
 
 type ContextType = {
   state: number;
@@ -38,12 +35,7 @@ function App() {
     <>
       <BrowserRouter>
         <ScoreContext.Provider value={{ state, dispatch }}>
-          <Routes>
-            <Route path="/" element={<Auth />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/game" element={<Game />} />
-            <Route path="/result" element={<Result />} />
-          </Routes>
+          <RouteConfig />
         </ScoreContext.Provider>
       </BrowserRouter>
     </>
