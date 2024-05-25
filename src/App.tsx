@@ -1,5 +1,5 @@
 import "normalize.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter} from "react-router-dom";
 import { createContext, useReducer } from "react";
 import { RouteConfig } from "./components/RouteConfig";
 
