@@ -1,4 +1,5 @@
 import { scoreStore } from "../store/scoreStore";
+import { authStore } from "../store/authStore";
 import { Button } from "../components/Button";
 
 export const Result = () => {
@@ -6,14 +7,16 @@ export const Result = () => {
   const correct = scoreStore((state) => state.correct);
   const skip = scoreStore((state) => state.skip);
   const reset = scoreStore((state) => state.reset);
+  const userName = authStore((state) => state.userName);
 
   const handleResetScore = () => {
     reset();
   }
+
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
       <div className="flex flex-col items-center h-1/2">
-        <div className="text-[100px]">{score}ポイント</div>
+        <div className="text-[50px]">{userName}さん{score}ポイント</div>
         <div className="flex flex-row">
           <div className="text-[30px]">正解数: {correct}</div>
           <div className="text-[30px]">スキップ数: {skip}</div>

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ interface LoginForm {
 export const Auth = () => {
   const navigate = useNavigate();
   const setIsAuth = authStore((state) => state.setIsAuth);
+  const setUserName = authStore((state) => state.setUserName);
   const [isSignUp, setIsSignUp] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +39,7 @@ export const Auth = () => {
         await updateProfile(user, {
           displayName: data.name,
         });
-        console.log('User signed up:', user);
+        setUserName(data.name || "");
         setIsAuth(true);
         navigate("/home");
       } catch (err) {
@@ -49,7 +50,7 @@ export const Auth = () => {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
         const user = userCredential.user;
-        console.log('User signed in:', user);
+        setUserName(user.displayName || "");
         setIsAuth(true);
         navigate("/home");
       } catch (err) {
