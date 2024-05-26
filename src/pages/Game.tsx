@@ -11,9 +11,10 @@ export const Game = () => {
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const { increment, decrement } = scoreStore();
+  const { increment, decrement, incrementCorrect, incrementSkip, reset } = scoreStore();
 
   useEffect(() => {
+    reset();
     (async () => {
       try {
         if (inputRef.current) {
@@ -67,6 +68,7 @@ export const Game = () => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       decrement(1);
+      incrementSkip();
       fetchNewPokemon();
     }
   };
@@ -107,6 +109,7 @@ export const Game = () => {
       setInputValue(currentInputValue.slice(0, -expectedChar.length));
       if (position + expectedChar.length === text.length) {
         increment(1);
+        incrementCorrect();
         fetchNewPokemon();
       }
     } else {
