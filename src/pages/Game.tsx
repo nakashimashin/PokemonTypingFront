@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, useContext } from "react";
-import { ScoreContext } from "../App";
+import { useEffect, useRef, useState} from "react";
 import { toHiragana } from "wanakana";
 import { Timer } from "../components/Timer";
+import { scoreStore } from "../store/scoreStore";
 
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
@@ -11,7 +11,7 @@ export const Game = () => {
   const [position, setPosition] = useState<number>(0);
   const [typo, setTypo] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const { dispatch } = useContext(ScoreContext);
+  const { increment, decrement } = scoreStore();
 
   useEffect(() => {
     (async () => {
@@ -28,7 +28,6 @@ export const Game = () => {
 
   useEffect(() => {
     fetchPokemonImage();
-    console.log(pokemonData);
   }, [pokemonUrl]);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +66,7 @@ export const Game = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      dispatch({ type: "decrement", score: 1 });
+      decrement(1);
       fetchNewPokemon();
     }
   };
@@ -78,7 +77,7 @@ export const Game = () => {
 
     let lastInputChar = currentInputValue.slice(-1);
     let expectedChar = text[position];
-    let expectedHiragana = katakanaToHiragana(expectedChar); // カタカナからひらがなへ変換
+    let expectedHiragana = katakanaToHiragana(expectedChar);
 
     // 拗音をチェック
     if (
@@ -102,27 +101,17 @@ export const Game = () => {
       }
     }
 
-    console.log(`現在の入力: ${currentInputValue}`);
-    console.log(`現在のポジション: ${position}`);
-    console.log(`期待される文字 (カタカナ): ${expectedChar}`);
-    console.log(`期待される文字 (ひらがな): ${expectedHiragana}`);
-    console.log(`入力された最後の文字: ${lastInputChar}`);
-
     // ユーザー入力と期待される文字が一致するかどうかを確認
     if (lastInputChar === expectedChar || lastInputChar === expectedHiragana) {
-      console.log("入力が期待される文字に一致しました");
       setPosition(position + expectedChar.length); // 拗音の場合、ポジションを2つ進める
       setInputValue(currentInputValue.slice(0, -expectedChar.length));
       if (position + expectedChar.length === text.length) {
-        console.log("全ての文字が正しく入力されました");
-        dispatch({ type: "increment", score: 1 });
+        increment(1);
         fetchNewPokemon();
       }
     } else {
-      console.log("入力が期待される文字と一致しませんでした");
       if (!typo.includes(position)) {
         setTypo([...typo, position]);
-        console.log(`タイポが発生したポジション: ${position}`);
       }
     }
   };
