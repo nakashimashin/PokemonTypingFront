@@ -2,15 +2,17 @@ import { Button } from "../components/Button";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { authStore } from "../store/authStore";
 
 
 export const Home = () => {
   const navigate = useNavigate();
+  const setIsAuth = authStore((state) => state.setIsAuth);
 
   const signOutUser = async () => {
-    console.log('Signing out user');
     try {
       await signOut(auth);
+      setIsAuth(false);
       navigate('/');
     } catch (error) {
       console.error('Error signing out:', error);

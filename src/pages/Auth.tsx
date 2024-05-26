@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import { signUpSchema, signInSchema } from "../utils/validationSchema";
+import { authStore } from "../store/authStore";
 
 interface LoginForm {
   name?: string;
@@ -12,9 +13,9 @@ interface LoginForm {
   password: string;
 }
 
-
 export const Auth = () => {
   const navigate = useNavigate();
+  const setIsAuth = authStore((state) => state.setIsAuth);
   const [isSignUp, setIsSignUp] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +39,7 @@ export const Auth = () => {
           displayName: data.name,
         });
         console.log('User signed up:', user);
+        setIsAuth(true);
         navigate("/home");
       } catch (err) {
         setError((err as Error).message);
@@ -48,6 +50,7 @@ export const Auth = () => {
         const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
         const user = userCredential.user;
         console.log('User signed in:', user);
+        setIsAuth(true);
         navigate("/home");
       } catch (err) {
         setError((err as Error).message);
