@@ -5,7 +5,6 @@ import { scoreStore } from "../store/scoreStore";
 
 export const Game = () => {
   const [pokemonData, setPokemonData] = useState<string>();
-  const [pokemonUrl, setPokemonUrl] = useState<string>();
   const [pokemonImage, setPokemonImage] = useState<string>();
   const [text, setText] = useState<string>(" ");
   const [position, setPosition] = useState<number>(0);
@@ -13,46 +12,40 @@ export const Game = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const { increment, decrement, incrementCorrect, incrementSkip, reset } = scoreStore();
 
-  useEffect(() => {
-    reset();
-    (async () => {
-      try {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-        await fetchPokemon();
-      } catch (err) {
-        console.error("Failed to fetch pokemon", err);
-      }
-    })();
-  }, []);
+
+  const fetchPokemon = async () => {
+    try {
+      const index = Math.floor(Math.random() * 640 + 1);
+      const res = await fetch(`${pokeApiUrl}/${index}`);
+      const result = await res.json();
+      const pokemonName = result.names[0].name;
+      setPokemonData(pokemonName);
+      setText(pokemonName);
+      const url = result.varieties[0].pokemon.url;
+      const imageRes = await fetch(url);
+      const imageResult = await imageRes.json();
+      const image = imageResult.sprites.front_default;
+      setPokemonImage(image);
+    } catch (err) {
+      console.error("Failed to fetch pokemon", err);
+    }
+  };
+
 
   useEffect(() => {
-    fetchPokemonImage();
-  }, [pokemonUrl]);
+    const initializeGame = async () => {
+      reset();
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+      await fetchPokemon();
+    };
+    initializeGame();
+  }, []);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const pokeApiUrl = "https://pokeapi.co/api/v2/pokemon-species";
-
-  const fetchPokemon = async () => {
-    const index = Math.floor(Math.random() * 640 + 1);
-    const res = await fetch(`${pokeApiUrl}/${index}`);
-    const result = await res.json();
-    setPokemonData(result.names[0].name);
-    setText(result.names[0].name);
-    const url = result.varieties[0].pokemon.url;
-    setPokemonUrl(url);
-  };
-
-  const fetchPokemonImage = async () => {
-    if (pokemonUrl) {
-      const res = await fetch(pokemonUrl);
-      const result = await res.json();
-      const image = result.sprites.front_default;
-      setPokemonImage(image);
-    }
-  };
 
   const katakanaToHiragana = (str: string) => {
     return toHiragana(str);
@@ -122,7 +115,7 @@ export const Game = () => {
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
       <div className="flex flex-col items-center">
-        <div>{pokemonData}</div>
+        {/* <div>{pokemonData}</div> */}
         <img src={pokemonImage} className="bg-white w-[200px] h-[200px] mb-3" />
         <div tabIndex={0}>
           <div id="textbox">
