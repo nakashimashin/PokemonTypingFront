@@ -20,6 +20,7 @@ export const Game = () => {
       const result = await res.json();
       const pokemonName = result.names[0].name;
       setPokemonData(pokemonName);
+      console.log(pokemonData);
       setText(pokemonName);
       const url = result.varieties[0].pokemon.url;
       const imageRes = await fetch(url);
